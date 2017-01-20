@@ -1,0 +1,27 @@
+body {
+  text-align: center;
+  background-color: #eeeeee;
+  font-family: 'Roboto', sans-serif;
+}
+
+.center {
+  margin: 5px auto 90px;
+  text-align: center;
+}
+
+.title {
+  font-size: 90px;
+  padding: 40px;
+  color: #a01a1f;
+}
+
+canvas {
+  background-color: #86888a;
+  border: 2px;
+  border-color: black;
+}
+
+canvas:hover {
+  width: 51px;
+  height: 49px;
+}
