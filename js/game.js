@@ -28,7 +28,6 @@ $(document).ready(function(){
         },500);
       };
   });
-  // };
 
 // draws the circle function
   function dCircle(button, num, color){
@@ -53,7 +52,6 @@ $(document).ready(function(){
     };    
   };
 
-
 // Computer basic logic below
 function computerTurn(button){
   var cpu = Math.floor(Math.random()*42);
@@ -69,7 +67,6 @@ function computerTurn(button){
 };
 
 function checkWinner(){
-  console.log(button);
   setTimeout(function(){
     if (gameResult == false){
       if(turnCount == 42) alert("Draw!!");
@@ -77,11 +74,9 @@ function checkWinner(){
         gameResult = true;
         alert("You Win!");
       };  
-    }
+    };
   }, 350);
-  
 };
-
 
 // closes doc ready below
 });
