@@ -19,6 +19,12 @@ canvas {
   background-color: #86888a;
   border: 2px;
   border-color: black;
+  -webkit-transition: -webkit-transform 1s;
+  -webkit-transition: -ms-transform 1s;
+  -webkit-transition: -o-transform 1s;
+  -webkit-transition: -moz-transform 1s;
+  -webkit-transition: transform 1s;
+  /*box-shadow: 20px 20px 50px #1c1c1c;*/
 }
 
 canvas:hover {
