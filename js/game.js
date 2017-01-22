@@ -1,10 +1,12 @@
 $(document).ready(function(){  
   var turnCount = 0;
   var gameResult = false;
-  var content = [];
 
   var button = [];
-  for (var i = 1; i < 43; i++) button[i] = document.getElementById('canvas'+i);
+  for (var i = 1; i < 43; i++) {
+    button[i] = document.getElementById('canvas'+i);
+    button[i].bDisabled = false;
+  }
 
   var ctx = [];
   for (var i = 1; i < 43; i++) ctx[i] = button[i].getContext("2d");
@@ -12,25 +14,28 @@ $(document).ready(function(){
 // player turn and initial start to game
   $( "canvas" ).on( "click", function(){
     var cell = (this);
-    var num = cell.id.match(/\d/g).join("");
-    var color = 'green';
-    if ($(cell).not('.bDisabled')){
-      // ($(cell).addClass('bDisabled'))
-      content[num] = 'x';
-      cell.style.webkitTransform = "rotateY(180deg)";
-      dCircle(button, num, color);    
-    }
-    // checkWinner();
-    if (gameResult == false && turnCount < 42){
-      computerTurn(button);
-    };
+    if( gameResult == false && cell.bDisabled == false && turnCount < 42){
+      var num = cell.id.match(/\d/g).join("");
+      var color = '#27ae61';
+        button[num].player = 'x';
+        cell.style.webkitTransform = "rotateY(180deg)";
+        dCircle(button, num, color);    
+      };
+      checkWinner();
+      if (gameResult == false && turnCount < 42){
+        setTimeout(function(){
+          computerTurn(button);  
+        },500);
+      };
   });
+  // };
 
 // draws the circle function
   function dCircle(button, num, color){
-    turnCount ++;
-    $(button[num]).addClass('bDisabled');
-    button[num].style.opacity = 0.7;
+    if(button[num].bDisabled == false){
+      button[num].bDisabled = true;
+      $(button[num]).addClass('bDisabled');
+      button[num].style.opacity = 0.7;
 
 // delays drawing of circle below
     setTimeout(function(){
@@ -42,23 +47,40 @@ $(document).ready(function(){
       ctx[num].strokeStyle = color;
       ctx[num].stroke();
       ctx[num].closePath();  
-    },300); 
+      },350);
+
+      turnCount ++; 
+    };    
   };
+
 
 // Computer basic logic below
 function computerTurn(button){
-  content[cpu] = 'y';
   var cpu = Math.floor(Math.random()*42);
-  var color = 'red';
-  if ($('button[cpu]').not('.bDisabled')){
+  var color = '#c1392b';
+  if(button[cpu].bDisabled == false){
     dCircle(button, cpu, color);
+    button[cpu].player = 'y';
+  } else if (button[cpu].bDisabled == false){
+    dCircle(button, cpu, color);
+    button[cpu].player = 'y';
   }
   else computerTurn(button);
 };
 
-// function checkWinner(){
-//   console.log( ($('canvas').filter('.bDisabled')) );
-// };
+function checkWinner(){
+  console.log(button);
+  setTimeout(function(){
+    if (gameResult == false){
+      if(turnCount == 42) alert("Draw!!");
+      if(button[1].player == 'x' && button[2].player == 'x' && button[3].player == 'x' && button[4].player == 'x'){
+        gameResult = true;
+        alert("You Win!");
+      };  
+    }
+  }, 350);
+  
+};
 
 
 // closes doc ready below
