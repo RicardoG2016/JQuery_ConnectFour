@@ -15,7 +15,7 @@ $(document).ready(function(){
     var num = cell.id.match(/\d/g).join("");
     var color = 'green';
     if ($(cell).not('.bDisabled')){
-      ($(cell).addClass('bDisabled'))
+      // ($(cell).addClass('bDisabled'))
       content[num] = 'x';
       cell.style.webkitTransform = "rotateY(180deg)";
       dCircle(button, num, color);    
@@ -29,7 +29,9 @@ $(document).ready(function(){
 // draws the circle function
   function dCircle(button, num, color){
     turnCount ++;
+    $(button[num]).addClass('bDisabled');
     button[num].style.opacity = 0.7;
+
 // delays drawing of circle below
     setTimeout(function(){
       ctx[num].beginPath();
@@ -50,7 +52,6 @@ function computerTurn(button){
   var color = 'red';
   if ($('button[cpu]').not('.bDisabled')){
     dCircle(button, cpu, color);
-    $('button[cpu]').addClass('bDisabled');
   }
   else computerTurn(button);
 };
