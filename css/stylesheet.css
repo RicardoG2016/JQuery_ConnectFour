@@ -25,7 +25,6 @@ canvas {
   -webkit-transition: -o-transform 1s;
   -webkit-transition: -moz-transform 1s;
   -webkit-transition: transform 1s;
-  
 }
 
 canvas:hover {
@@ -43,5 +42,4 @@ canvas:hover {
 
 #reloadButton:hover {
   font-size: 40px;
-  box-shadow: 10px 10px 30px #1c1c1c;
 }

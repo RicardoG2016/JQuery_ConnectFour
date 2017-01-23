@@ -19,13 +19,13 @@ $(document).ready(function(){
       var color = '#27ae61';
         button[num].player = 'x';
         cell.style.webkitTransform = "rotateY(180deg)";
-        dCircle(button, num, color);    
+        floatDown(button, num, color);    
       };
       checkWinner();
       if (gameResult == false && turnCount < 42){
         setTimeout(function(){
           computerTurn(button);  
-        },500);
+        }, 500);
       };
   });
 
@@ -35,7 +35,6 @@ $(document).ready(function(){
       button[num].bDisabled = true;
       $(button[num]).addClass('bDisabled');
       button[num].style.opacity = 0.7;
-
 // delays drawing of circle below
     setTimeout(function(){
       ctx[num].beginPath();
@@ -49,7 +48,7 @@ $(document).ready(function(){
       },350);
 
       turnCount ++; 
-    };    
+    };
   };
 
 // Computer basic logic below
@@ -66,6 +65,24 @@ function computerTurn(button){
   else computerTurn(button);
 };
 
+
+function floatDown(button, num, color){
+  var nextCell = num;
+
+  while ( button[nextCell].bDisabled == false ){
+    if(button[+nextCell + 7] != undefined){
+       if(button[+nextCell + 7].bDisabled == true){
+          dCircle(button, nextCell, color);
+       } else (nextCell = +nextCell + 7);
+    }
+    else(dCircle(button, nextCell, color));
+  };
+
+};
+
+
+
+// Winner function below will review possible solutions and check for a winner.
 function checkWinner(){
   setTimeout(function(){
     if (gameResult == false){
@@ -78,6 +95,5 @@ function checkWinner(){
   }, 350);
 };
 
-// closes doc ready below
 });
 
