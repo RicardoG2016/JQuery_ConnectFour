@@ -99,10 +99,10 @@ function checkWinner(){
         alert("Draw!!");
       };
         
-      var player = $('canvas').filter('.player');
-      var cpu = $('canvas').filter('.cpu');
+    var player = $('canvas').filter('.player');
+    var cpu = $('canvas').filter('.cpu');
 
-      // horizontal check
+// horizontal check
   for(p = 0; p < player.length; p++){
     var pass = 0;
     for(r = 1; r < 4 ; r++)
