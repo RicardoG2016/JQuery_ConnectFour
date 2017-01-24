@@ -99,28 +99,76 @@ function checkWinner(){
         alert("Draw!!");
       };
         
-    var player = $('canvas').filter('.player');
-    var cpu = $('canvas').filter('.cpu');
+
+    // var player = $('canvas').filter('.player');
+    // var cpu = $('canvas').filter('.cpu');
 
 // horizontal check
-  for(p = 0; p < player.length; p++){
-    var pass = 0;
-    for(r = 1; r < 4 ; r++)
+var board = $('canvas');   
+var playerScore = 0;
+var cpuScore = 0;
+var token = null;
 
-    if($(player[p]).hasClass('edge') || $(player[p + 1]).hasClass('edge') || $(player[p + 2]).hasClass('edge')){
-      pass = 0; 
-    } 
-    else if(player[p].id.match(/\d/g).join("") - player[r].id.match(/\d/g).join("") == -r){
-       pass ++;
-       if(pass == 3){
-        alert('You Won!!');
-        gameResult = true;
-       };
-    }
-    else{ 
-       pass = 0;
+
+  for(p = 0; p < 42; p++){
+    console.log(p)
+    if(playerScore == 3){
+      console.log("Final score" + playerScore);
+      gameResult = true;
+      alert("You Win!");
+    }else if(cpuScore == 3){
+      gameResult = true;
+      alert("You Lose!");
     };
+    if($(board[p]).hasClass('bDisabled') == false){
+      token = null;
+      playerScore = 0;
+      cpuScore = 0;
+    }else{
+        if(token == true && row == Math.floor(p / 7)){
+          playerScore++;
+          cpuScore = 0;
+          console.log("score" + playerScore);
+          console.log("first row:" + row);
+        }else if(token == false && row == Math.floor(p / 7)){
+          cpuScore++;
+          playerScore = 0;
+        }else{
+          token = $(board[p]).hasClass('bDisabled');
+          row = Math.floor(p / 7);
+          console.log(row)
+          console.log("score" + playerScore);
+        };
+    };
+
+    // var boardCell = board[p].id.match(/\d/g).join("")-1;
+    // if(Math.Floor(boardcell/7){
+
+    // }
+
+
+  //   var pass = 0;
+  //   for(r = 1; r < 4 ; r++)
+
+  //   if($(player[p]).hasClass('edge') || $(player[p + 1]).hasClass('edge') || $(player[p + 2]).hasClass('edge')){
+  //     pass = 0; 
+  //   } 
+  //   else if(player[p].id.match(/\d/g).join("") - player[r].id.match(/\d/g).join("") == -r){
+  //      pass ++;
+  //      if(pass == 3){
+  //       alert('You Won!!');
+  //       gameResult = true;
+  //      };
+  //   }
+  //   else{ 
+  //      pass = 0;
+  //   };
   };
+
+
+
+
+
 
   var container = [];
   var vertPass = 0
