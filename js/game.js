@@ -1,18 +1,18 @@
 $(document).ready(function(){  
-  // game setup
+// game setup
   var turnCount = 0;
   var gameResult = false;
   var humanColor = '#27ae61';
   var computerColor = '#c1392b';
   var user = 'player';
+  var playerScore = 0;
+  var cpuScore = 0;
+  var previous = 0;
 
-// winner board
-var content = [];
-  for (var i = 0; i < 42; i++) {
-    content[i] = 'z';
-  };
+// board arrays, content is used to decide winner, button provides data canvases and ctx gets 2d to draw.
+  var content = [];
+  for (var i = 0; i < 42; i++) content[i] = 'z';
 
-// game tools
   var button = [];
   for (var i = 1; i < 43; i++) {
     button[i] = document.getElementById('canvas'+i);
@@ -23,9 +23,7 @@ var content = [];
   for (var i = 1; i < 43; i++) ctx[i] = button[i].getContext("2d");
 
 // helper functions
-  function buttonId(cell){
-    return cell.id.match(/\d/g).join("");
-  }
+  function buttonId(cell) {return cell.id.match(/\d/g).join("")};
 
   function checkScore(playerScore, cpuScore){
     if(playerScore == 3){
@@ -40,22 +38,34 @@ var content = [];
 // player turn and initial start to game
   $( "canvas" ).on( "click", function(){
   var cell = (this);
-  if( gameResult == false && cell.bDisabled == false){
+  if(gameResult == false && cell.bDisabled == false){
     var num = buttonId(cell);
     var color = humanColor;
-    floatDown(button, num, color, user);    
+    floatDown(button, num, color, user); 
+    checkWinner();
   };
 
-  if (gameResult == false && turnCount < 42){
+  if(gameResult == false && turnCount < 42){
     setTimeout(function(){
       computerTurn(button, computerColor);  
-    }, 360);
+    }, 820);
   };
+  checkWinner();
 });
+
+// Computer turn basic logic below
+function computerTurn(button, computerColor){
+  var activeButtons = $('canvas').not('.bDisabled');
+  var ranIndex = Math.floor(Math.random()*activeButtons.length)
+  var selection = activeButtons[ranIndex];
+  var cpu = buttonId(selection);
+  var color = computerColor;
+  if(button[cpu].bDisabled == false) floatDown(button, cpu, color);
+  else(computerTurn(computerColor));
+};
 
 // draws the circle function
 function dCircle(button, num, color, user){
-  
   if(button[num].bDisabled == false){
     button[num].bDisabled = true;
     $(button[num]).addClass('bDisabled');
@@ -82,34 +92,20 @@ function dCircle(button, num, color, user){
     ctx[num].stroke();
     ctx[num].closePath();  
     },300);
-    
     turnCount ++; 
   };
 };
 
-// Computer turn basic logic below
-function computerTurn(button, computerColor){
-  var activeButtons = $('canvas').not('.bDisabled');
-  var ranIndex = Math.floor(Math.random()*activeButtons.length)
-  var selection = activeButtons[ranIndex];
-  var cpu = buttonId(selection);
-  
-  var color = computerColor;
-  if(button[cpu].bDisabled == false){
-    floatDown(button, cpu, color);
-  }else(computerTurn(computerColor));
-};
-
 // function placed dot on the lowest part of the board.
 function floatDown(button, num, color, user){
-  var nextCell = num;
-  while ( button[nextCell].bDisabled == false ){
-    if(typeof button[+nextCell + 7] == "object"){
-      if(button[+nextCell + 7].bDisabled == true) dCircle(button, nextCell, color, user); 
-       else (nextCell = +nextCell + 7);
-    }else(dCircle(button, nextCell, color, user));
+  var currentBlock = num;
+  while (button[currentBlock].bDisabled == false){
+    var nextDown = +currentBlock + 7;  
+    if(typeof button[nextDown] == "object"){
+      if(button[nextDown].bDisabled == true) dCircle(button, currentBlock, color, user); 
+       else (currentBlock = nextDown);
+    }else(dCircle(button, currentBlock, color, user));
   };
-  checkWinner();
 };
 
 // Winner function below will review possible solutions and check for a winner.
@@ -120,22 +116,15 @@ function checkWinner(){
         gameResult = true; 
         alert("Draw!!");
       };
-
-    horizontalTest(content);
-    // verticalTest(content);
-
-
+    hTest(content);
+    vTest(content);
     };
-  }, 500);
+  }, 820);
 };
 
 //---------------------------- Tests------------------------
 // vertical check
-function verticalTest(content){
-  var playerScore = 0;
-  var cpuScore = 0;
-  var previous = 0;
-
+function vTest(content, playerScore, cpuScore, previous){
   for(col = 0; col < 7; col++){
     for(row = 0; row < 6; row++){
       index = col + (row * 7)
@@ -144,63 +133,37 @@ function verticalTest(content){
     this.col = col;
     this.val = content[index];  
   };
-    
-  var current = new position(content, index, col);
 
-  if(current.val == 'z'){
-    playerScore = 0;
-    cpuScore = 0;
-  }else{
+  var current = new position(content, index, col);
     if(current.val != 'z' && previous.val == 'x' && current.val == previous.val && current.col == previous.col){
       playerScore++;
-    }else if(current.val != 'z' && previous.val =='y' && current.val == previous.val && current.col == previous.col){
+    }else if(current.val != 'z' && previous.val == 'y' && current.val == previous.val && current.col == previous.col){
       cpuScore++;
     }else{
       var previous = new position(content, index, col);
       playerScore = 0;
       cpuScore = 0;
     };
-  };
   checkScore(playerScore, cpuScore);
-
   };
-};
+ };
 }
 
 // horizontal test
-function horizontalTest(content){
-  var playerScore = 0;
-  var cpuScore = 0;
-  var previous = 0;
-
+function hTest(content, playerScore, cpuScore, previous){
   for(p = 0; p < 42; p++){
-  var current = content[p];
-  if(current == 0){
-    playerScore = 0;
-    cpuScore = 0;
-  }else{
+    var current = content[p];
     if(current != 'z' && previous == 'x' && current == previous && row == Math.floor(p / 7)){
       playerScore++;
-      // cpuScore = 0;
     }else if(current != 'z' && previous =='y' && current == previous && row == Math.floor(p / 7)){
       cpuScore++;
-      // playerScore = 0;
     }else{
       previous = current;
       row = Math.floor(p / 7);
       playerScore = 0;
       cpuScore = 0;
     };
+    checkScore(playerScore, cpuScore);
   };
-  checkScore(playerScore, cpuScore);
-};
-
-}
-
-
-
-
-
-
+ };
 });
-
