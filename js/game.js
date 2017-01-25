@@ -42,7 +42,7 @@ $(document).ready(function(){
     var num = buttonId(cell);
     var color = humanColor;
     floatDown(button, num, color, user); 
-    checkWinner();
+  checkWinner(); 
   };
 
   if(gameResult == false && turnCount < 42){
@@ -50,7 +50,7 @@ $(document).ready(function(){
       computerTurn(button, computerColor);  
     }, 820);
   };
-  checkWinner();
+  checkWinner(); 
 });
 
 // Computer turn basic logic below
@@ -91,7 +91,7 @@ function dCircle(button, num, color, user){
     ctx[num].strokeStyle = color;
     ctx[num].stroke();
     ctx[num].closePath();  
-    },300);
+    }, 300);
     turnCount ++; 
   };
 };
@@ -116,8 +116,10 @@ function checkWinner(){
         gameResult = true; 
         alert("Draw!!");
       };
-    hTest(content);
-    vTest(content);
+    hTest(content, playerScore, cpuScore, previous);
+    vTest(content, playerScore, cpuScore, previous);
+    southwestTest(content, playerScore, cpuScore, previous);
+    southeastTest(content, playerScore, cpuScore, previous);
     };
   }, 820);
 };
@@ -166,4 +168,42 @@ function hTest(content, playerScore, cpuScore, previous){
     checkScore(playerScore, cpuScore);
   };
  };
+
+// diagonal test
+function southwestTest(content, playerScore, cpuScore, previous){
+  for(i = 0; i < 19; i++){
+      var current = content[i];
+      var nextR = content[i + 8];
+      var secR = content[i + 16];
+      var thirdR = content[i + 24];
+    if(current == 'x' && current == nextR && nextR == secR && secR == thirdR){
+      playerScore = 3;
+    }else if(current == 'y' && current == nextR && nextR == secR && secR == thirdR){
+      cpuScore = 3;
+    }else{
+      playerScore = 0;
+      cpuScore = 0;
+    };
+  checkScore(playerScore, cpuScore);    
+  };
+};
+
+function southeastTest(content, playerScore, cpuScore, previous){
+  for(i = 0; i < 22; i++){
+      var current = content[i];
+      var nextL = content[i + 6];
+      var secL = content[i + 12];
+      var thirdL = content[i + 18];
+    if(current == 'x' && current == nextL && nextL == secL && secL == thirdL){
+      playerScore = 3;
+    }else if(current == 'y' && current == nextL && nextL == secL && secL == thirdL){
+      cpuScore = 3;
+    }else{
+      playerScore = 0;
+      cpuScore = 0;
+    };
+ checkScore(playerScore, cpuScore);    
+ };
+};
+
 });
