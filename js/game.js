@@ -6,6 +6,12 @@ $(document).ready(function(){
   var computerColor = '#c1392b';
   var user = 'player';
 
+// winner board
+var content = [];
+  for (var i = 0; i < 42; i++) {
+    content[i] = 'z';
+  };
+
 // game tools
   var button = [];
   for (var i = 1; i < 43; i++) {
@@ -21,6 +27,16 @@ $(document).ready(function(){
     return cell.id.match(/\d/g).join("");
   }
 
+  function checkScore(playerScore, cpuScore){
+    if(playerScore == 3){
+      gameResult = true;
+      alert("You Win!");
+    }else if(cpuScore == 3){
+      gameResult = true;
+      alert("You Lose!");
+    };
+  };
+
 // player turn and initial start to game
   $( "canvas" ).on( "click", function(){
   var cell = (this);
@@ -33,17 +49,24 @@ $(document).ready(function(){
   if (gameResult == false && turnCount < 42){
     setTimeout(function(){
       computerTurn(button, computerColor);  
-    }, 370);
+    }, 360);
   };
 });
 
 // draws the circle function
 function dCircle(button, num, color, user){
+  
   if(button[num].bDisabled == false){
     button[num].bDisabled = true;
     $(button[num]).addClass('bDisabled');
-    if(user == 'player') $(button[num]).addClass('player'); 
-    else($(button[num]).addClass('cpu'));
+    if(user == 'player'){
+      $(button[num]).addClass('player'); 
+      content[num-1] = 'x';
+    }
+    else{
+      $(button[num]).addClass('cpu'); 
+      content[num-1] = 'y'; 
+    };
 
     button[num].style.webkitTransform = "rotateY(180deg)";
     button[num].style.opacity = 0.7;
@@ -58,7 +81,8 @@ function dCircle(button, num, color, user){
     ctx[num].strokeStyle = color;
     ctx[num].stroke();
     ctx[num].closePath();  
-    },350);
+    },300);
+    
     turnCount ++; 
   };
 };
@@ -85,126 +109,93 @@ function floatDown(button, num, color, user){
        else (nextCell = +nextCell + 7);
     }else(dCircle(button, nextCell, color, user));
   };
-  if(turnCount >6) checkWinner();
+  checkWinner();
 };
-
 
 // Winner function below will review possible solutions and check for a winner.
 function checkWinner(){
-
   setTimeout(function(){
     if(gameResult == false){
       if(turnCount == 42){
         gameResult = true; 
         alert("Draw!!");
       };
-        
 
-    // var player = $('canvas').filter('.player');
-    // var cpu = $('canvas').filter('.cpu');
-
-// horizontal check
-var board = $('canvas');   
-var playerScore = 0;
-var cpuScore = 0;
-var token = null;
+    horizontalTest(content);
+    // verticalTest(content);
 
 
-  for(p = 0; p < 42; p++){
-    console.log(p)
-    if(playerScore == 3){
-      console.log("Final score" + playerScore);
-      gameResult = true;
-      alert("You Win!");
-    }else if(cpuScore == 3){
-      gameResult = true;
-      alert("You Lose!");
-    };
-    if($(board[p]).hasClass('bDisabled') == false){
-      token = null;
-      playerScore = 0;
-      cpuScore = 0;
-    }else{
-        if(token == true && row == Math.floor(p / 7)){
-          playerScore++;
-          cpuScore = 0;
-          console.log("score" + playerScore);
-          console.log("first row:" + row);
-        }else if(token == false && row == Math.floor(p / 7)){
-          cpuScore++;
-          playerScore = 0;
-        }else{
-          token = $(board[p]).hasClass('bDisabled');
-          row = Math.floor(p / 7);
-          console.log(row)
-          console.log("score" + playerScore);
-        };
-    };
-
-    // var boardCell = board[p].id.match(/\d/g).join("")-1;
-    // if(Math.Floor(boardcell/7){
-
-    // }
-
-
-  //   var pass = 0;
-  //   for(r = 1; r < 4 ; r++)
-
-  //   if($(player[p]).hasClass('edge') || $(player[p + 1]).hasClass('edge') || $(player[p + 2]).hasClass('edge')){
-  //     pass = 0; 
-  //   } 
-  //   else if(player[p].id.match(/\d/g).join("") - player[r].id.match(/\d/g).join("") == -r){
-  //      pass ++;
-  //      if(pass == 3){
-  //       alert('You Won!!');
-  //       gameResult = true;
-  //      };
-  //   }
-  //   else{ 
-  //      pass = 0;
-  //   };
-  };
-
-
-
-
-
-
-  var container = [];
-  var vertPass = 0
-
-
-// vertical check
-
-    //   for(p = 0; p < player.length; p++)
-    //   {
-    //     container[p] = player[p].id.match(/\d/g).join("")
-    //   };
-
-
-    // for(vertNum = 0; vertNum < player.length; vertNum++){
-    //   var number = 1;
-    //   var column = number;
-    //   var nextR = -column * 7
-    //   console.log(container)
-    //   console.log("---------------")
-    //   console.log(container[vertNum]);
-    //   console.log(container[column]);
-    //   console.log(nextR);
-    // if(container[vertNum] - container[column] == nextR){
-    //   number++
-    //   console.log('passed');
-    //   vertPass++
-    //   console.log("vert:" + vertPass)
-    // };
-    //   if(vertPass == 3){
-    //     alert("You Win!!")
-    //   };
-
-    // }
     };
   }, 500);
 };
+
+//---------------------------- Tests------------------------
+// vertical check
+function verticalTest(content){
+  var playerScore = 0;
+  var cpuScore = 0;
+  var previous = 0;
+
+  for(col = 0; col < 7; col++){
+    for(row = 0; row < 6; row++){
+      index = col + (row * 7)
+
+  function position(content, index, col) {
+    this.col = col;
+    this.val = content[index];  
+  };
+    
+  var current = new position(content, index, col);
+
+  if(current.val == 'z'){
+    playerScore = 0;
+    cpuScore = 0;
+  }else{
+    if(current.val != 'z' && previous.val == 'x' && current.val == previous.val && current.col == previous.col){
+      playerScore++;
+    }else if(current.val != 'z' && previous.val =='y' && current.val == previous.val && current.col == previous.col){
+      cpuScore++;
+    }else{
+      var previous = new position(content, index, col);
+      playerScore = 0;
+      cpuScore = 0;
+    };
+  };
+  checkScore(playerScore, cpuScore);
+
+  };
+};
+}
+
+// horizontal test
+function horizontalTest(content){
+  var playerScore = 0;
+  var cpuScore = 0;
+  var previous = 0;
+
+  for(p = 0; p < 42; p++){
+  var current = content[p];
+  if(current == 0){
+    playerScore = 0;
+    cpuScore = 0;
+  }else{
+    if(current != 'z' && previous == 'x' && current == previous && row == Math.floor(p / 7)){
+      playerScore++;
+      // cpuScore = 0;
+    }else if(current != 'z' && previous =='y' && current == previous && row == Math.floor(p / 7)){
+      cpuScore++;
+      // playerScore = 0;
+    }else{
+      previous = current;
+      row = Math.floor(p / 7);
+      playerScore = 0;
+      cpuScore = 0;
+    };
+  };
+  checkScore(playerScore, cpuScore);
+};
+
+}
 
 
 
