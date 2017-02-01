@@ -2,8 +2,8 @@ $(document).ready(function(){
 // game setup
   var turnCount = 0;
   var gameResult = false;
-  var humanColor = '#27ae61';
-  var computerColor = '#c1392b';
+  var humanColor = '#34495e';
+  var computerColor = '#f1c40f';
   var user = 'player';
   var playerScore = 0;
   var cpuScore = 0;
